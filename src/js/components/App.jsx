@@ -15,34 +15,32 @@ const OPERATOR = Object.freeze({
   DIVIDE: "÷",
 });
 
-const OPERATORS = [
-  OPERATOR.SUM,
-  OPERATOR.SUBTRACT,
-  OPERATOR.MULTIPLY,
-  OPERATOR.DIVIDE,
-];
-
 const BUTTONS = [
   // FIRST ROW
   CALCULATOR_BUTTONS.CLEAR,
   CALCULATOR_BUTTONS.TOGGLE_SIGN,
   CALCULATOR_BUTTONS.PERCENTAGE,
   OPERATOR.DIVIDE,
-  //SECOND ROW
+
+  // SECOND ROW
   "7",
   "8",
   "9",
   OPERATOR.MULTIPLY,
+
+  // THIRD ROW
   "4",
   "5",
   "6",
-  // THIRD ROW
   OPERATOR.SUBTRACT,
+
+  // FOURTH ROW
   "1",
   "2",
   "3",
-  // LAST ROW
   OPERATOR.SUM,
+
+  // LAST ROW
   "0",
   CALCULATOR_BUTTONS.DECIMAL,
   CALCULATOR_BUTTONS.EQUALS,
@@ -52,10 +50,24 @@ export default function App() {
   const [display, setDisplay] = useState("0");
   const [operationDisplay, setOperationDisplay] = useState("");
 
+  function handleButtonClick(value) {
+    if (value === CALCULATOR_BUTTONS.CLEAR) {
+      setDisplay("0");
+      setOperationDisplay("");
+      return;
+    }
+
+    if (!isNaN(value)) {
+      setDisplay((prevDisplay) => {
+        return prevDisplay === "0" ? value : prevDisplay.concat(value);
+      });
+    }
+  }
+
   return (
     <div className="calculator">
       <Display operation={operationDisplay} value={display} />
-      <ButtonGrid />
+      <ButtonGrid onButtonClick={handleButtonClick} />
     </div>
   );
 }
@@ -69,18 +81,27 @@ function Display({ operation, value }) {
   );
 }
 
-function ButtonGrid() {
+function ButtonGrid({ onButtonClick }) {
   return (
     <div className="buttons">
       {BUTTONS.map((button) => (
-        <CalculatorButton label={button} key={button} />
+        <CalculatorButton
+          key={button}
+          label={button}
+          onButtonClick={onButtonClick}
+        />
       ))}
     </div>
   );
 }
-function CalculatorButton({ label }) {
+
+function CalculatorButton({ label, onButtonClick }) {
   return (
-    <button key={label} className={label === "0" ? "zero" : ""}>
+    <button
+      type="button"
+      className={label === "0" ? "zero" : ""}
+      onClick={() => onButtonClick(label)}
+    >
       {label}
     </button>
   );
