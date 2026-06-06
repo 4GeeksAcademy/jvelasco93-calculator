@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 const CALCULATOR_BUTTONS = Object.freeze({
   CLEAR: "C",
   DECIMAL: ".",
@@ -47,21 +49,39 @@ const BUTTONS = [
 ];
 
 export default function App() {
+  const [display, setDisplay] = useState("0");
+  const [operationDisplay, setOperationDisplay] = useState("");
+
   return (
-    <>
-      <div className="calculator">
-        <div className="display text-white">
-          <div className="operation-display">0</div>
-          <div className="main-display">0</div>
-        </div>
-        <div className="buttons">
-          {BUTTONS.map((button) => (
-            <button key={button} className={button === "0" ? "zero" : ""}>
-              {button}
-            </button>
-          ))}
-        </div>
-      </div>
-    </>
+    <div className="calculator">
+      <Display operation={operationDisplay} value={display} />
+      <ButtonGrid />
+    </div>
+  );
+}
+
+function Display({ operation, value }) {
+  return (
+    <div className="display">
+      <div className="operation-display">{operation}</div>
+      <div className="main-display">{value}</div>
+    </div>
+  );
+}
+
+function ButtonGrid() {
+  return (
+    <div className="buttons">
+      {BUTTONS.map((button) => (
+        <CalculatorButton label={button} key={button} />
+      ))}
+    </div>
+  );
+}
+function CalculatorButton({ label }) {
+  return (
+    <button key={label} className={label === "0" ? "zero" : ""}>
+      {label}
+    </button>
   );
 }
