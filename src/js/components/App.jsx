@@ -57,10 +57,35 @@ export default function App() {
       return;
     }
 
+    if (value === CALCULATOR_BUTTONS.PERCENTAGE) {
+      setDisplay((prevDisplay) => {
+        return String(Number(prevDisplay / 100));
+      });
+      return;
+    }
+
+    if (value === CALCULATOR_BUTTONS.TOGGLE_SIGN) {
+      if (display === "0") return;
+      setDisplay((prevDisplay) => {
+        return prevDisplay.startsWith("-")
+          ? prevDisplay.slice(1)
+          : `-${prevDisplay}`;
+      });
+      return;
+    }
+
+    if (value === CALCULATOR_BUTTONS.DECIMAL) {
+      if (display.includes(CALCULATOR_BUTTONS.DECIMAL)) return;
+      setDisplay((prevDisplay) => {
+        return prevDisplay.concat(CALCULATOR_BUTTONS.DECIMAL);
+      });
+    }
+
     if (!isNaN(value)) {
       setDisplay((prevDisplay) => {
         return prevDisplay === "0" ? value : prevDisplay.concat(value);
       });
+      return;
     }
   }
 
